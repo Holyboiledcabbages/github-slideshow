@@ -1,0 +1,127 @@
+/*Done by Harihar Mahadhev B on 20th December 2020
+
+C program to convert a number from one base to another of user's choice:
+
+Algorithm:
+1) User input is stored in char inputarray
+2) Any possible digits in the form of alphabets are converted to corresponding integers and stored into int array1
+3) This integer array of digits is converted to decimal and stored in variable sum
+4) The decimal value is converted to a number of output base and stored in int array2, then the array is reversed
+5) The integers in array2 are converted to corresponding alphabets or kept as integers and stored in char outputarray
+6) the characters in outputarray give us the required number
+*/
+
+
+#include<stdio.h>
+#include<ctype.h>
+#include<stdlib.h>
+#include<math.h>
+#include<limits.h>
+
+int main()
+{
+    int inputbase,outputbase;
+    printf("\tBase Number Conversion Calculator\n\n"); 
+    printf("\tenter base of input number\n");
+    scanf("%d",&inputbase);
+    printf("\tenter base of output number\n");
+    scanf("%d",&outputbase);
+    
+    if(inputbase<2 || inputbase>36 || outputbase<2 || outputbase>36){
+        printf("\tBase can be between 2 and 36 only\n");    exit(0);
+    }/*checks if input and output base are valid*/
+    
+    char inputarray[50]={};
+    int i=0;
+    printf("\tenter the digits of your number, then enter !\n");
+    while(inputarray[i-1]!='!'){
+        scanf("%c",&inputarray[i]);
+        if(inputarray[i]>=97 && inputarray[i]<=122){inputarray[i]=toupper(inputarray[i]);}/*converts lowercase characters, if any, to uppercase*/
+
+        if(inputarray[i]>=65 && inputarray[i]<=90){
+            if(inputarray[i]>inputbase+54){printf("Invalid digit. Digit is not part of user specified base. Program terminated.\n");    exit(0);}
+        }/*checks if digit is part of input base if it is an alphabet*/
+
+        if(inputarray[i]>=48 && inputarray[i]<=57){
+            if(inputarray[i]>inputbase+47){printf("Invalid digit. Digit is not part of user specified base. Program terminated.\n");    exit(0);}
+        }/*checks if digit is part of input base if it is not an alphabet*/
+
+        i++;}/*the exclamation mark has been used as sentinel value which the user would input after entering the digits of their number*/
+    
+    int array1[50]={};  int j=0;
+    while(j<i){
+        if(inputarray[j]>=48 && inputarray[j]<=57){array1[j]=(int)inputarray[j]-(int)48;}
+        else{array1[j]=(int)inputarray[j]-(int)55;}
+        j++;
+    }
+   
+    /*elements [1] to [i-2] contain our required digits in array1, because the last 2 characters in array1 are '!' and '\0' respectively*/
+    
+    unsigned long long int sum=0;
+    int k=1;
+    
+    while(k<=i-2){
+    sum+=array1[k]*pow(inputbase,i-2-k);
+    if (array1[k]*pow(inputbase,i-2-k)> ULLONG_MAX - sum ){
+        printf("\tData overflow has occurred. Your input number was too large. Program Terminated.\n");
+        exit(0);
+    }
+    k++;
+    }
+    
+    /*sum is the input number's value in decimal*/
+    
+    printf("\t%llu is your number's value in decimal\n",sum);
+    
+    int array2[50]={};
+    int u=0;
+    
+    while(sum){
+        array2[u]=sum%outputbase;
+        sum=sum/outputbase;
+        u++;
+    }
+
+    /*array2 now has the individual digits of the number in output base in reverse order*/    
+    u--;
+
+    /*u is the number of digits that the number in output base will have.*/
+    
+    int start=0,end=u;
+    
+    while(start<end){
+        int temp=array2[start];
+        array2[start]=array2[end];
+        array2[end]=temp;
+        start++;
+        end--;
+    }
+    
+    /*array2 now contains the individual digits of the number in output base in correct order*/
+
+    char outputarray[50]={};
+    int v=0;
+    while(v<=u){
+        if(array2[v]>=0 && array2[v]<=9){
+            outputarray[v]=(char)array2[v]+(char)48;
+        }
+        else if(array2[v]>=10 && array2[v]<=36){
+            outputarray[v]=(char)array2[v]+(char)55;
+        }
+        else{};
+        v++;
+    }
+    
+    printf("\tyour number's value in base %d is:\n",outputbase);
+    
+    int w=0;
+    while(w<=u){
+        printf("%c",outputarray[w]);
+        w++;
+    }
+
+    printf("\n");
+    
+ return 0;
+    
+}
