@@ -2,5 +2,5 @@
 layout: slide
 title: "Welcome to our second slide!"
 ---
-Your text
+Bananas are delicious and nutritious
 Use the left arrow to go back!
